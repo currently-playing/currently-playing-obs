@@ -7,7 +7,8 @@ if (!code) {
 } else {
     const accessToken = await getAccessToken(clientId, code);
     const songinfo = await fetchProfile(accessToken);
-    populateUI(songinfo);
+    console.log(songinfo);
+    await populateUI(songinfo);
 }
 
 async function redirectToAuthCodeFlow(clientId) {
@@ -74,8 +75,16 @@ async function fetchProfile(token) {
     return await result.json();
 }
 
-function populateUI(songinfo) {
-    document.getElementsByClassName("song").innerText = songinfo.name;
-    document.getElementsByClassName("album").innerText = songinfo.album.name;
-    document.getElementsByClassName("album").innerText = songinfo.artists.name;
+async function populateUI(songinfo) {
+    if (songinfo) {
+        songName = songinfo.name;
+        albumName = songinfo.album.name;
+        artistName = songinfo.artists.name;
+        songLen = int(songinfo.duration_ms / 1000);
+
+        //document.getElementsByTagName("meta").content = songLen;
+    }
+    else {
+        //document.getElementsByTagName("meta").content = 1
+    }
 }
