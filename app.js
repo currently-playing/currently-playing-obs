@@ -6,12 +6,12 @@ if (!code) {
     redirectToAuthCodeFlow(clientId);
 } else {
     const accessToken = await getAccessToken(clientId, code);
-    const songinfo = await fetchProfile(accessToken);
+    const songinfo = await fetchCurrentSong(accessToken);
     console.log(songinfo);
-    await populateUI(songinfo);
+    populateUI(songinfo);
 }
 
-async function redirectToAuthCodeFlow(clientId) {
+export async function redirectToAuthCodeFlow(clientId) {
     const verifier = generateCodeVerifier(128);
     const challenge = await generateCodeChallenge(verifier);
 
@@ -47,7 +47,7 @@ async function generateCodeChallenge(codeVerifier) {
         .replace(/=+$/, '');
 }
 
-async function getAccessToken(clientId, code) {
+export async function getAccessToken(clientId, code) {
     const verifier = localStorage.getItem("verifier");
 
     const params = new URLSearchParams();
@@ -67,7 +67,7 @@ async function getAccessToken(clientId, code) {
     return access_token;
 }
 
-async function fetchProfile(token) {
+async function fetchCurrentSong(token) {
     const result = await fetch("https://api.spotify.com/v1/me/player/currently-playing/item", {
         method: "GET", headers: { Authorization: `Bearer ${token}` }
     });
@@ -75,7 +75,7 @@ async function fetchProfile(token) {
     return await result.json();
 }
 
-async function populateUI(songinfo) {
+function populateUI(songinfo) {
     if (songinfo) {
         songName = songinfo.name;
         albumName = songinfo.album.name;
