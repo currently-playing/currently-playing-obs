@@ -18,6 +18,7 @@ catch (e) {
 
 export async function redirectToAuthCodeFlow(clientId) {
     const verifier = generateCodeVerifier(128);
+    console.log(verifier);
     const challenge = await generateCodeChallenge(verifier);
 
     localStorage.setItem("verifier", verifier);
@@ -34,22 +35,26 @@ export async function redirectToAuthCodeFlow(clientId) {
 }
 
 function generateCodeVerifier(length) {
-    let text = '';
     let possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    
+    const values = crypto.getRandomValues(new Uint8Array(length));
 
-    for (let i = 0; i < length; i++) {
-        text += possible.charAt(Math.floor(Math.random() * possible.length));
-    }
-    return text;
+    return values.reduce((acc, x) => acc + possible[x % possible.length], "");
 }
 
 async function generateCodeChallenge(codeVerifier) {
-    const data = new TextEncoder().encode(codeVerifier);
+    // hash verifier using SHA256 algorithm
+    const encoder = new TextEncoder();
+    const data = encoder.encode(codeVerifier);
+
+    // end value outputted into digest
     const digest = await window.crypto.subtle.digest('SHA-256', data);
-    return btoa(String.fromCharCode.apply(null, [...new Uint8Array(digest)]))
+
+
+    return btoa(String.fromCharCode(...new Uint8Array(digest)))
+        .replace(/=/g, '')
         .replace(/\+/g, '-')
-        .replace(/\//g, '_')
-        .replace(/=+$/, '');
+        .replace(/\//g, '_');
 }
 
 export async function getAccessToken(clientId, code) {
