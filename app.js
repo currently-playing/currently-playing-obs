@@ -1,12 +1,12 @@
 const clientId = "e77e563e6765445c98400077670ae665"; // Replace with your client ID
 const params = new URLSearchParams(window.location.search);
-const code = params.get("code");
 
 try {
     if (!code) {
         redirectToAuthCodeFlow(clientId);
     } else {
-        const accessToken = await getAccessToken(clientId, code);
+        const accessToken = await getAccessToken(clientId);
+        console.log(accessToken);
         const songinfo = await fetchCurrentSong(accessToken);
         console.log(songinfo);
         populateUI(songinfo);
@@ -57,10 +57,13 @@ async function generateCodeChallenge(codeVerifier) {
         .replace(/\//g, '_');
 }
 
-export async function getAccessToken(clientId, code) {
+export async function getAccessToken(clientId) {
     const verifier = localStorage.getItem("verifier");
 
-    const params = new URLSearchParams();
+    // get access code from url after user authorizes application
+    const params = new URLSearchParams(window.location.search);
+    let code = params.get('code');
+
     params.append("client_id", clientId);
     params.append("grant_type", "authorization_code");
     params.append("code", code);
