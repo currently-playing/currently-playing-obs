@@ -20,7 +20,7 @@ export async function redirectToAuthCodeFlow(clientId) {
     const params = new URLSearchParams();
     params.append("client_id", clientId);
     params.append("response_type", "code");
-    params.append("redirect_uri", "http://localhost:3000");
+    //params.append("redirect_uri", "http://localhost:3000");
     params.append("scope", "user-read-currently-playing");
     params.append("code_challenge_method", "S256");
     params.append("code_challenge", challenge);
@@ -68,7 +68,7 @@ export async function getAccessToken(clientId, code) {
 }
 
 async function fetchCurrentSong(token) {
-    const result = await fetch("https://api.spotify.com/v1/me/player/currently-playing/item", {
+    const result = await fetch("https://api.spotify.com/v1/me/player/currently-playing", {
         method: "GET", headers: { Authorization: `Bearer ${token}` }
     });
 
