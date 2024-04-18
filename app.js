@@ -2,13 +2,18 @@ const clientId = "e77e563e6765445c98400077670ae665"; // Replace with your client
 const params = new URLSearchParams(window.location.search);
 const code = params.get("code");
 
-if (!code) {
-    redirectToAuthCodeFlow(clientId);
-} else {
-    const accessToken = await getAccessToken(clientId, code);
-    const songinfo = await fetchCurrentSong(accessToken);
-    console.log(songinfo);
-    populateUI(songinfo);
+try {
+    if (!code) {
+        redirectToAuthCodeFlow(clientId);
+    } else {
+        const accessToken = await getAccessToken(clientId, code);
+        const songinfo = await fetchCurrentSong(accessToken);
+        console.log(songinfo);
+        populateUI(songinfo);
+    }
+}
+catch (e) {
+    console.log(e);
 }
 
 export async function redirectToAuthCodeFlow(clientId) {
