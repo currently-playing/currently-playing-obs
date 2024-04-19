@@ -9,8 +9,8 @@ try {
         const accessToken = await getAccessToken(clientId);
         console.log(accessToken);
         const songinfo = await fetchCurrentSong(accessToken);
-        console.log(songinfo);
-        populateUI(songinfo);
+        console.log(songinfo.item);
+        populateUI(songinfo.item);
     }
 }
 catch (e) {
@@ -96,13 +96,11 @@ async function fetchCurrentSong(token) {
 
 function populateUI(songinfo) {
     if (songinfo) {
-        // convert json to javascript obj
-        let info = JSON.parse(songinfo);
 
         // update innertext of each element
-        document.getElementsByClassName("song").innerText = info.item.name;
-        document.getElementsByClassName("album").innerText = info.item.album.name;
-        document.getElementsByClassName("artist").innerText = info.item.artists.name;
+        document.getElementsByClassName("song").innerText = songinfo.name;
+        document.getElementsByClassName("album").innerText = songinfo.album.name;
+        document.getElementsByClassName("artist").innerText = songinfo.artists[0].name;
 
         //document.getElementsByTagName("meta").content = songLen;
     }
