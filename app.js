@@ -20,7 +20,7 @@ async function refreshSong(clientId){
     console.log(songinfo.item);
     populateUI(songinfo.item);
 
-    setTimeout(refreshSong(clientId, 1000));
+    setTimeout(refreshSong(clientId), 1000);
 
 }
 
