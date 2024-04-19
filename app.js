@@ -98,11 +98,11 @@ function populateUI(songinfo) {
     if (songinfo) {
 
         // update innertext of each element
-        document.getElementsByClassName("song").innerText = songinfo.name;
+        document.getElementsByClassName("song").innerHTML = songinfo.name;
         console.log(songinfo.name);
-        document.getElementsByClassName("album").innerText = songinfo.album.name;
+        document.getElementsByClassName("album").innerHTML = songinfo.album.name;
         console.log(songinfo.album.name);
-        document.getElementsByClassName("artist").innerText = songinfo.artists[0].name;
+        document.getElementsByClassName("artist").innerHTML = songinfo.artists[0].name;
         console.log(songinfo.artists[0].name);
         //document.getElementsByTagName("meta").content = songLen;
     }
