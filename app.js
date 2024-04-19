@@ -99,9 +99,11 @@ function populateUI(songinfo) {
 
         // update innertext of each element
         document.getElementsByClassName("song").innerText = songinfo.name;
+        console.log(songinfo.name);
         document.getElementsByClassName("album").innerText = songinfo.album.name;
+        console.log(songinfo.album.name);
         document.getElementsByClassName("artist").innerText = songinfo.artists[0].name;
-
+        console.log(songinfo.artists[0].name);
         //document.getElementsByTagName("meta").content = songLen;
     }
     else {
