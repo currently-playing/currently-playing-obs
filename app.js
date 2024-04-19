@@ -1,5 +1,6 @@
 const clientId = "e77e563e6765445c98400077670ae665"; // Replace with your client ID
 const params = new URLSearchParams(window.location.search);
+let code = params.get(code);
 
 try {
     if (!code) {
