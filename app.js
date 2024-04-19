@@ -36,10 +36,11 @@ export async function redirectToAuthCodeFlow(clientId) {
 }
 
 function generateCodeVerifier(length) {
+    // string for character selection
     let possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
     
+    // select number (length) of random characters from possible characters
     const values = crypto.getRandomValues(new Uint8Array(length));
-
     return values.reduce((acc, x) => acc + possible[x % possible.length], "");
 }
 
@@ -65,12 +66,16 @@ export async function getAccessToken(clientId) {
     const params = new URLSearchParams(window.location.search);
     let code = params.get('code');
 
+    // update parameters for POST request
+    // verifier generated in generateCodeVerifier()
+    // code recieved in url after user authenticates
     params.append("client_id", clientId);
     params.append("grant_type", "authorization_code");
     params.append("code", code);
     params.append("redirect_uri", "https://currently-playing.github.io/");
     params.append("code_verifier", verifier);
 
+    // POST request for access token
     const result = await fetch("https://accounts.spotify.com/api/token", {
         method: "POST",
         headers: { "Content-Type": "application/x-www-form-urlencoded" },
@@ -91,9 +96,13 @@ async function fetchCurrentSong(token) {
 
 function populateUI(songinfo) {
     if (songinfo) {
-        document.getElementsByClassName("song").innerText = songinfo.item.name;
-        document.getElementsByClassName("album").innerText = songinfo.item.album.name;
-        document.getElementsByClassName("artist").innerText = songinfo.item.artists.name;
+        // convert json to javascript obj
+        let info = JSON.parse(songinfo);
+
+        // update innertext of each element
+        document.getElementsByClassName("song").innerText = info.item.name;
+        document.getElementsByClassName("album").innerText = info.item.album.name;
+        document.getElementsByClassName("artist").innerText = info.item.artists.name;
 
         //document.getElementsByTagName("meta").content = songLen;
     }
