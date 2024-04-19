@@ -91,9 +91,9 @@ async function fetchCurrentSong(token) {
 
 function populateUI(songinfo) {
     if (songinfo) {
-        songName = songinfo.name;
-        albumName = songinfo.album.name;
-        artistName = songinfo.artists.name;
+        document.getElementsByClassName("song").innerText = songinfo.name;
+        document.getElementsByClassName("album").innerText = songinfo.album.name;
+        document.getElementsByClassName("artist").innerText = songinfo.artists.name;
         songLen = int(songinfo.duration_ms / 1000);
 
         //document.getElementsByTagName("meta").content = songLen;
