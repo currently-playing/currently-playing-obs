@@ -6,15 +6,22 @@ try {
     if (!code) {
         redirectToAuthCodeFlow(clientId);
     } else {
-        const accessToken = await getAccessToken(clientId);
-        console.log(accessToken);
-        const songinfo = await fetchCurrentSong(accessToken);
-        console.log(songinfo.item);
-        populateUI(songinfo.item);
+        refreshSong(clientId);
     }
 }
 catch (e) {
     console.log(e);
+}
+
+async function refreshSong(clientId){
+    const accessToken = await getAccessToken(clientId);
+    console.log(accessToken);
+    const songinfo = await fetchCurrentSong(accessToken);
+    console.log(songinfo.item);
+    populateUI(songinfo.item);
+
+    setTimeout(refreshSong(clientId, 1000));
+
 }
 
 export async function redirectToAuthCodeFlow(clientId) {
