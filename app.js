@@ -6,20 +6,24 @@ try {
     if (!code) {
         redirectToAuthCodeFlow(clientId);
     } else {
-        refreshSong(clientId);
+    const accessToken = await getAccessToken(clientId);
+    console.log(accessToken);
+        refreshSong(clientId, accessToken);
     }
 }
 catch (e) {
     console.log(e);
 }
 
-async function refreshSong(clientId){
-    const accessToken = await getAccessToken(clientId);
-    console.log(accessToken);
+async function refreshSong(clientId, accessToken){
+    // use current access token to gather info from spotify api
     const songinfo = await fetchCurrentSong(accessToken);
     console.log(songinfo.item);
+
+    // populate each div with info
     populateUI(songinfo.item);
 
+    // call fn again after 1 sec
     setTimeout(refreshSong(clientId), 1000);
 
 }
