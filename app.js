@@ -6,26 +6,77 @@ try {
     if (!code) {
         redirectToAuthCodeFlow(clientId);
     } else {
-    const accessToken = await getAccessToken(clientId);
-    console.log(accessToken);
-        refreshSong(clientId, accessToken);
+        const accessToken = await getAccessToken(clientId);
+        console.log(accessToken);
+        const { promise, stopPolling } = startPolling(refreshSong, accessToken);
+        promise.then().catch(() => console.log("Something went wrong with promise..."));
+
+        const timeout = () =>
+            new Promise((resolve) => setTimeout(resolve, 1000));
+
+        await timeout(1000);
+        console.log("Canceling polling");
+        stopPolling();
     }
 }
 catch (e) {
     console.log(e);
 }
 
-async function refreshSong(clientId, accessToken){
+
+function startPolling(refreshSong, accessToken) {
+    let polling = false;
+    let rejectThis = null;
+
+    const stopPolling = () => {
+        if (polling) {
+            console.log("Polling already stopped...");
+        } else {
+            console.log("Stopping polling...");
+            polling = false;
+            rejectThis(new Error("Polling cancelled"));
+        }
+    };
+
+    const promise = new Promise((resolve, reject) => {
+        polling = true;
+        rejectThis = reject;
+
+        const executePoll = async () => {
+            try {
+                const result = await refreshSong(accessToken);
+                if (polling && testFn(result)) {
+                    polling = false;
+                    resolve(result);
+                } else {
+                    setTimeout(executePoll, 1000);
+                }
+            } catch (e) {
+                polling = false;
+                reject(new Error("Polling cancelled due to API error"));
+            }
+        };
+
+        setTimeout(executePoll, 1000);
+    });
+
+    return {promise, stopPolling};
+}
+
+function testFn(result) {
+    // want to poll forever for now
+    return false;
+}
+
+async function refreshSong(accessToken){
     // use current access token to gather info from spotify api
     const songinfo = await fetchCurrentSong(accessToken);
     console.log(songinfo.item);
 
     // populate each div with info
-    populateUI(songinfo.item);
+    await populateUI(songinfo.item);
 
-    // call fn again after 1 sec
-    setTimeout(refreshSong(clientId), 1000);
-
+    return songinfo;
 }
 
 export async function redirectToAuthCodeFlow(clientId) {
@@ -105,7 +156,7 @@ async function fetchCurrentSong(token) {
     return await result.json();
 }
 
-function populateUI(songinfo) {
+async function populateUI(songinfo) {
     if (songinfo) {
 
         // update innertext of each element
