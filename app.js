@@ -8,6 +8,7 @@ try {
     } else {
         const accessToken = await getAccessToken(clientId);
         console.log(accessToken);
+        
         const { promise, stopPolling } = startPolling(refreshSong, accessToken);
         promise.then().catch(() => console.log("Something went wrong with promise..."));
 

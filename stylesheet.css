@@ -1,0 +1,9 @@
+p {
+    color: white;
+    font-family: fantasy;
+}
+div {
+    border-color: bisque;
+    border-style: inset;
+    border-radius: 50px;
+}
