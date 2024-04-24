@@ -161,11 +161,11 @@ async function populateUI(songinfo) {
     if (songinfo) {
 
         // update innertext of each element
-        document.getElementById("song").innerHTML = songinfo.name;
+        document.getElementById("song").innerHTML = " " + songinfo.name;
         console.log(songinfo.name);
-        document.getElementById("album").innerHTML = songinfo.album.name;
+        document.getElementById("album").innerHTML = " " + songinfo.album.name;
         console.log(songinfo.album.name);
-        document.getElementById("artist").innerHTML = songinfo.artists[0].name;
+        document.getElementById("artist").innerHTML = " " + songinfo.artists[0].name;
         console.log(songinfo.artists[0].name);
         //document.getElementsByTagName("meta").content = songLen;
     }

@@ -1,11 +1,17 @@
-p {
-    color: white;
-    font-family: fantasy;
-    text-align: center;
-    font-size: large;
-}
 div {
+    text-align: center;
+}
+div.outer {
     border-color: bisque;
     border-style: inset;
     border-radius: 50px;
+}
+div.inner {
+    color: black;
+    font-family: fantasy;
+    text-align: center;
+    font-size: x-large;
+}
+i {
+    text-align: center;
 }
